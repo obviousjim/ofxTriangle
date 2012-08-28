@@ -16,9 +16,8 @@ void testApp::update(){
 
     //Draw anything you like inside the buffer
     buffer.begin();
-    glClearColor(0, 0, 0, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
+    ofClear(0, 0, 0);
+    
     ofSetHexColor(0xFF0000);
     ofFill();
     for (int i = 0; i < 480; i += 30){

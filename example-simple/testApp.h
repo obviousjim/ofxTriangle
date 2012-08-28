@@ -21,6 +21,10 @@ private:
     ofFbo buffer;
     ofPolyline line;
     void loadVertices();
+    void fillBuffer();
+    void drawSolidFillShape();
+    void drawBufferFillShape();
+    void drawInfo();
 };
 
 #endif

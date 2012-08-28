@@ -8,7 +8,7 @@ void testApp::setup(){
 	
     buffer.allocate(640, 480, GL_RGBA, 1);
     
-    createPointsVector();
+    loadVertices();
 }
 
 
@@ -28,7 +28,7 @@ void testApp::update(){
     
     //Triangulate the points
     triangle.clear();
-    triangle.triangulate(points);
+    triangle.triangulate(line.getVertices());
 }
 
 
@@ -62,51 +62,12 @@ void testApp::keyPressed(int key){
 	
 }
 
-void testApp::createPointsVector(){
-    
-    //Make a simple concave polygon
-    points.clear();
-    
-    ofPoint point1;
-    point1.x = 100;
-    point1.y = 100;
-    point1.z = 0;
-    
-    ofPoint point2;
-    point2.x = 200;
-    point2.y = 100;
-    point2.z = 0;
-    
-    ofPoint point3;
-    point3.x = 300;
-    point3.y = 200;
-    point3.z = 0;
-    
-    ofPoint point4;
-    point4.x = 400;
-    point4.y = 100;
-    point4.z = 0;
-    
-    ofPoint point5;
-    point5.x = 500;
-    point5.y = 100;
-    point5.z = 0;
-    
-    ofPoint point6;
-    point6.x = 500;
-    point6.y = 400;
-    point6.z = 0;
-    
-    ofPoint point7;
-    point7.x = 100;
-    point7.y = 400;
-    point7.z = 0;
-    
-    points.push_back(point1);
-    points.push_back(point2);
-    points.push_back(point3);
-    points.push_back(point4);
-    points.push_back(point5);
-    points.push_back(point6);
-    points.push_back(point7);
+void testApp::loadVertices(){
+    line.addVertex(ofPoint(100, 100));
+    line.addVertex(ofPoint(200, 100));
+    line.addVertex(ofPoint(300, 200));
+    line.addVertex(ofPoint(400, 100));
+    line.addVertex(ofPoint(500, 100));
+    line.addVertex(ofPoint(500, 400));
+    line.addVertex(ofPoint(100, 400));
 }

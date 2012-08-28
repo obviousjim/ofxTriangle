@@ -19,8 +19,8 @@ private:
 	ofxTriangle             triangle;
     
     ofFbo buffer;
-    vector<ofPoint> points;
-    void createPointsVector();
+    ofPolyline line;
+    void loadVertices();
 };
 
 #endif

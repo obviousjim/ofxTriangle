@@ -43,7 +43,7 @@ void testApp::update(){
 		
         for (int i=0; i<contourFinder.nBlobs; i++)
         {
-            triangle.triangulate(contourFinder.blobs[i], max( 3.0f, (float)contourFinder.blobs[i].pts.size()/5));
+            triangle.triangulate(contourFinder.blobs[i].pts, max( 3.0f, (float)contourFinder.blobs[i].pts.size()/5));
         }
 		
 	}

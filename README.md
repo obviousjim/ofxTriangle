@@ -1,3 +1,5 @@
+ofxTriangle
+-----------
 Given a set of points from a complex polygon, triangulates the points of the smallest number of triangles required to fill that polygon.
 
 Particularly useful for breaking down concave shapes (which can't be drawn natively by OpenGL) into triangles (which OpenGL is happy with)

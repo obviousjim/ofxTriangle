@@ -7,8 +7,7 @@ void ofxTriangle::triangulate(ofxCvBlob &cvblob, int resolution)
 }
 #endif
 
-void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution)
-{
+void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution){
     int bSize = contour.size();
     float maxi = min(resolution, bSize);
 	
@@ -28,8 +27,7 @@ void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution)
     delobject->Triangulate();
 
     Delaunay::fIterator fit;
-    for ( fit = delobject->fbegin(); fit != delobject->fend(); ++fit )
-    {
+    for ( fit = delobject->fbegin(); fit != delobject->fend(); ++fit ) {
         int pta = delobject->Org(fit);
         int ptb = delobject->Dest(fit);
         int ptc = delobject->Apex(fit);
@@ -43,8 +41,7 @@ void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution)
         tr[1] = ofPoint(contour[ptb_id].x, contour[ptb_id].y);
         tr[2] = ofPoint(contour[ptc_id].x, contour[ptc_id].y);
 		
-        if( isPointInsidePolygon(&contour[0], contour.size(), getTriangleCenter(tr) ) )
-        {
+        if( isPointInsidePolygon(&contour[0], contour.size(), getTriangleCenter(tr) ) ) {
             ofxTriangleData td;
             td.a = ofPoint(tr[0].x, tr[0].y);
             td.b = ofPoint(tr[1].x, tr[1].y);
@@ -61,14 +58,12 @@ void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution)
     delete delobject;
 }
 
-void ofxTriangle::clear()
-{
+void ofxTriangle::clear(){
     triangles.clear();
     nTriangles = 0;
 }
 
-ofPoint ofxTriangle::getTriangleCenter(ofPoint *tr)
-{
+ofPoint ofxTriangle::getTriangleCenter(ofPoint *tr){
     float c_x = (tr[0].x + tr[1].x + tr[2].x) / 3;
     float c_y = (tr[0].y + tr[1].y + tr[2].y) / 3;
 
@@ -92,8 +87,9 @@ bool ofxTriangle::isPointInsidePolygon(ofPoint *polygon,int N, ofPoint p)
                 if (p.x <= MAX(p1.x,p2.x)) {
                     if (p1.y != p2.y) {
                         xinters = (p.y-p1.y)*(p2.x-p1.x)/(p2.y-p1.y)+p1.x;
-                        if (p1.x == p2.x || p.x <= xinters)
+                        if (p1.x == p2.x || p.x <= xinters){
                             counter++;
+						}
                     }
                 }
             }
@@ -101,36 +97,27 @@ bool ofxTriangle::isPointInsidePolygon(ofPoint *polygon,int N, ofPoint p)
         p1 = p2;
     }
 
-  if (counter % 2 == 0)
-    return false;
-  else
-    return true;
+	return counter % 2 != 0;
 }
 
-void ofxTriangle::draw(float x, float y)
-{
+void ofxTriangle::draw(float x, float y) {
     ofPushMatrix();
     ofTranslate(x, y, 0);
-        draw();
+	draw();
     ofPopMatrix();
 }
 
-void ofxTriangle::draw()
-{
+void ofxTriangle::draw() {
 	draw(ofRandom(0, 255),ofRandom(0, 255),ofRandom(0, 255));
 }
 
-void ofxTriangle::draw(float r, float g, float b)
-{
+void ofxTriangle::draw(float r, float g, float b) {
     ofFill();
 	
-    for (int i=0; i<nTriangles; i++)
-    {
+    for (int i=0; i<nTriangles; i++){
         ofSetColor(r,g,b);
         ofTriangle( triangles[i].a.x, triangles[i].a.y,
 				   triangles[i].b.x, triangles[i].b.y,
 				   triangles[i].c.x, triangles[i].c.y);
     }
-	
-	
 }

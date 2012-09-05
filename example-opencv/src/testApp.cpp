@@ -3,6 +3,7 @@
 void testApp::setup(){
 	
 	ofBackground(255, 255, 255);
+	ofSetVerticalSync(true);
     ofSetFrameRate(60);
 	
     colorImage.allocate(CAM_WIDTH, CAM_HEIGHT);
@@ -19,15 +20,13 @@ void testApp::setup(){
 
 void testApp::update(){
 	
-	vidGrabber.grabFrame();
+	vidGrabber.update();
 	
-	if (vidGrabber.isFrameNew())
-	{
+	if (vidGrabber.isFrameNew()){
         colorImage.setFromPixels(vidGrabber.getPixels(), CAM_WIDTH, CAM_HEIGHT);
         colorImage.mirror(false, true);
 		
-        if(bLearnBackground)
-        {
+        if(bLearnBackground) {
             bgImg = colorImage;
             bLearnBackground = false;
         }
@@ -41,8 +40,7 @@ void testApp::update(){
 		
         triangle.clear();
 		
-        for (int i=0; i<contourFinder.nBlobs; i++)
-        {
+        for (int i=0; i<contourFinder.nBlobs; i++){
             triangle.triangulate(contourFinder.blobs[i].pts, max( 3.0f, (float)contourFinder.blobs[i].pts.size()/5));
         }
 		

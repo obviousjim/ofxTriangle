@@ -32,33 +32,31 @@ typedef struct
 
 } ofxTriangleData;
 
-class ofxTriangle
-{
+class ofxTriangle {
     public :
 
-        ofxTriangle(){}
-        ~ofxTriangle(){}
+	ofxTriangle(){}
+	~ofxTriangle(){}
 #ifdef USE_OPENCV
-        // Triangulate a openCV blob
-        void triangulate(ofxCvBlob &cvblob, int resolution = 50);
+	// Triangulate a openCV blob
+	void triangulate(ofxCvBlob &cvblob, int resolution = 50);
 #endif
-		void triangulate(vector<ofPoint> contour, int resolution = 50);
+	void triangulate(vector<ofPoint> contour, int resolution = 50);
 
-        ofPoint getTriangleCenter(ofPoint *tr);
-        bool isPointInsidePolygon(ofPoint *polygon,int N, ofPoint p);
+	ofPoint getTriangleCenter(ofPoint *tr);
+	bool isPointInsidePolygon(ofPoint *polygon,int N, ofPoint p);
 
-        void draw();
-		void draw(float r, float g, float b);
+	void draw();
+	void draw(float r, float g, float b);
 
-        void draw(float x, float y);
-        void clear();
+	void draw(float x, float y);
+	void clear();
 
 
-        Delaunay* delobject;
+	Delaunay* delobject;
 
-        int nTriangles;
-        vector <ofxTriangleData> triangles;
-
+	int nTriangles;
+	vector <ofxTriangleData> triangles;
 
 };
 

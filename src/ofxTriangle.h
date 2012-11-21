@@ -17,17 +17,13 @@
 #include "ofxOpenCv.h"
 #endif
 
-#include <del_interface.hpp>
-
-using namespace tpp;
-//using namespace std;
 
 typedef struct
 {
     ofPoint a;
     ofPoint b;
     ofPoint c;
-
+    
     float area;
 
 } ofxTriangleData;
@@ -37,7 +33,7 @@ class ofxTriangle {
 
 	ofxTriangle(){
         nTriangles = 0;
-        delobject = NULL;
+        //delobject = NULL;
     }
     
 	~ofxTriangle(){}
@@ -56,9 +52,7 @@ class ofxTriangle {
 	void draw(float x, float y);
 	void clear();
 
-
-	Delaunay* delobject;
-	int nTriangles;
+    int nTriangles;
 	vector <ofxTriangleData> triangles;
 
 };

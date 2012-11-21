@@ -1,13 +1,3 @@
-#define REDUCED
-#define ANSI_DECLARATORS
-#define TRILIBRARY
-#define CDT_ONLY
-
-
-/*! \file triangle_impl.hpp
-        \brief A simple wrapper on triangle code.
- */
-
 /*****************************************************************************/
 /*                                                                           */
 /*      888888888        ,o,                          / 888                  */
@@ -204,7 +194,6 @@
 /*                                                                           */
 /*****************************************************************************/
 
-
 /* For single precision (which will save some memory and reduce paging),     */
 /*   define the symbol SINGLE by using the -DSINGLE compiler switch or by    */
 /*   writing "#define SINGLE" below.                                         */
@@ -221,6 +210,16 @@
 
 /* #define SINGLE */
 
+
+#define VOID void
+//#define REDUCED
+#define ANSI_DECLARATORS
+#define TRILIBRARY
+//#define CDT_ONLY
+// define REAL real
+#define REAL double
+
+
 #ifdef SINGLE
 #define REAL float
 #else /* not SINGLE */
@@ -230,7 +229,7 @@
 /* If yours is not a Unix system, define the NO_TIMER compiler switch to     */
 /*   remove the Unix-specific timing code.                                   */
 
-/* #define NO_TIMER */
+#define NO_TIMER 
 
 /* To insert lots of self-checks for internal errors, define the SELF_CHECK  */
 /*   symbol.  This will slow down the program significantly.  It is best to  */
@@ -244,7 +243,7 @@
 /*   TRILIBRARY symbol.  Read the file triangle.h for details on how to call */
 /*   the procedure triangulate() that results.                               */
 
-/* #define TRILIBRARY */
+#define TRILIBRARY
 
 /* It is possible to generate a smaller version of Triangle using one or     */
 /*   both of the following symbols.  Define the REDUCED symbol to eliminate  */
@@ -351,10 +350,6 @@
 
 #define ONETHIRD 0.333333333333333333333333333333333333333333333333333333333333
 
-#include <dpoint.hpp>
-#include <iostream>
-#include <algorithm>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -366,28 +361,13 @@
 #include <float.h>
 #endif /* CPU86 */
 #ifdef LINUX
-#ifndef CYGWIN
 #include <fpu_control.h>
-#endif /* not cygwin */
 #endif /* LINUX */
 #ifdef TRILIBRARY
 #include "triangle.h"
 #endif /* TRILIBRARY */
 
 /* A few forward declarations.                                               */
-
-
-/* Fast lookup arrays to speed some of the mesh manipulation primitives.     */
-
-int plus1mod3[3] = {1, 2, 0};
-int minus1mod3[3] = {2, 0, 1};
-
-
-class piyush {
-
-
- public:
-
 
 #ifndef TRILIBRARY
 char *readline();
@@ -544,8 +524,6 @@ struct otri {
   triangle *tri;
   int orient;                                         /* Ranges from 0 to 2. */
 };
-
-typedef struct otri __otriangle;
 
 /* The subsegment data structure.  Each subsegment contains two pointers to  */
 /*   adjoining subsegments, plus four pointers to vertices, plus two         */
@@ -770,7 +748,6 @@ struct mesh {
   struct otri recenttri;
 
 };                                                  /* End of `struct mesh'. */
-typedef struct mesh __pmesh;
 
 
 /* Data structure for command line switches and file names.  This structure  */
@@ -846,7 +823,7 @@ struct behavior {
 #endif /* not TRILIBRARY */
 
 };                                              /* End of `struct behavior'. */
-typedef struct behavior __pbehavior;
+
 
 /*****************************************************************************/
 /*                                                                           */
@@ -958,6 +935,10 @@ typedef struct behavior __pbehavior;
 /**                                                                         **/
 /**                                                                         **/
 
+/* Fast lookup arrays to speed some of the mesh manipulation primitives.     */
+
+int plus1mod3[3] = {1, 2, 0};
+int minus1mod3[3] = {2, 0, 1};
 
 /********* Primitives for triangles                                  *********/
 /*                                                                           */
@@ -3325,9 +3306,8 @@ struct behavior *b;
   int increment;
   int meshnumber;
 #endif /* not TRILIBRARY */
-  int i, j;
-
-  /* int k; char workstring[FILENAMESIZE]; */
+  int i, j, k;
+  char workstring[FILENAMESIZE];
 
   b->poly = b->refine = b->quality = 0;
   b->vararea = b->fixedarea = b->usertest = 0;
@@ -3976,7 +3956,7 @@ int alignment;
   /*   - The parameter `alignment'.                                   */
   /*   - sizeof(VOID *), so the stack of dead items can be maintained */
   /*       without unaligned accesses.                                */
-  if ((unsigned int)alignment > (unsigned int)sizeof(VOID *)) {
+  if (alignment > sizeof(VOID *)) {
     pool->alignbytes = alignment;
   } else {
     pool->alignbytes = sizeof(VOID *);
@@ -4376,10 +4356,8 @@ struct behavior *b;
   /*   integer index can occupy the same space as the subsegment pointers  */
   /*   or attributes or area constraint or extra nodes.                    */
   if ((b->voronoi || b->neighbors) &&
-      (
-		(unsigned int)(trisize) < (unsigned int)(6 * sizeof(triangle) + sizeof(int))
-	  )) {
-    trisize = (unsigned int)(6 * sizeof(triangle) + sizeof(int));
+      (trisize < 6 * sizeof(triangle) + sizeof(int))) {
+    trisize = 6 * sizeof(triangle) + sizeof(int);
   }
 
   /* Having determined the memory size of a triangle, initialize the pool. */
@@ -4939,11 +4917,7 @@ void exactinit()
   /*  cword = 4735; */
   cword = 4722;                 /* set FPU control word for double precision */
 #endif /* not SINGLE */
-#ifdef CYGWIN
-    __asm__ __volatile__ ("fldcw %0" : : "m" (*&cword));
-#else
   _FPU_SETCW(cword);
-#endif /* CYGWIN */
 #endif /* LINUX */
 
   every_other = 1;
@@ -5412,7 +5386,6 @@ REAL permanent;
   INEXACT REAL _i, _j;
   REAL _0;
 
-  axtbclen = aytbclen = bxtcalen = bytcalen = cxtablen = cytablen = 0;
   adx = (REAL) (pa[0] - pd[0]);
   bdx = (REAL) (pb[0] - pd[0]);
   cdx = (REAL) (pc[0] - pd[0]);
@@ -6471,7 +6444,7 @@ REAL dheight;
   adxbdy = adx * bdy;
   bdxady = bdx * ady;
 
-  det = adheight * (bdxcdy - cdxbdy)
+  det = adheight * (bdxcdy - cdxbdy) 
       + bdheight * (cdxady - adxcdy)
       + cdheight * (adxbdy - bdxady);
 
@@ -6988,7 +6961,7 @@ struct badtriang *badtri;
     length *= multiplier;
   }
   /* `length' is approximately squareroot(2.0) to what exponent? */
-  exponent = (int)(2.0 * exponent + (length > SQUAREROOTTWO));
+  exponent = 2.0 * exponent + (length > SQUAREROOTTWO);
   /* `exponent' is now in the range 0...2047 for IEEE double precision.   */
   /*   Choose a queue in the range 0...4095.  The shortest edges have the */
   /*   highest priority (queue 4095).                                     */
@@ -8453,11 +8426,7 @@ int triflaws;
       poolrestart(&m->flipstackers);
       m->lastflip = (struct flipstacker *) poolalloc(&m->flipstackers);
       m->lastflip->flippedtri = encode(horiz);
-      printf("Fatal Error: Contact piyush\n");
-      exit(1);
-      /*
       m->lastflip->prevflip = (struct flipstacker *) &insertvertex;
-      */
     }
 
 #ifdef SELF_CHECK
@@ -9228,40 +9197,6 @@ struct behavior *b;
 /*  divide-and-conquer algorithm needs to do.                                */
 /*                                                                           */
 /*****************************************************************************/
-
-struct cmp_point2D{
-	typedef reviver::dpoint<REAL,2> Point2D;
-	typedef Point2D* Point2Dptr;
-
-    bool operator() (Point2Dptr lhs, Point2Dptr rhs)
-    {
-	if( (*lhs)[0] < (*rhs)[0] ) return true;
-	else if (( (*lhs)[0] == (*rhs)[0]) && ( (*lhs)[1] < (*rhs)[1] ))
-		return true;
-
-        return false;
-    }
-
-};
-
-void printarray(vertex *sortarray, int arraysize){
-	typedef reviver::dpoint<REAL,2> Point2D;
-	typedef Point2D* Point2Dptr;
-	using std::cout;
-
-	cout << "Vertices sorted are:\n";
-	for(int i = 0; i < arraysize; ++i){
-		cout << *((Point2Dptr)(sortarray[i])) << std::endl;
-	}
-	cout << "Done\n";
-}
-
-void vertexsort1(vertex *sortarray, int arraysize){
-	typedef reviver::dpoint<REAL,2> Point2D;
-	typedef Point2D* Point2Dptr;
-	Point2Dptr *parray = (Point2Dptr *)sortarray;
-	std::sort(parray, parray+arraysize, cmp_point2D() );
-}
 
 /*****************************************************************************/
 /*                                                                           */
@@ -10067,11 +10002,8 @@ struct behavior *b;
   for (i = 0; i < m->invertices; i++) {
     sortarray[i] = vertextraverse(m);
   }
-
   /* Sort the vertices. */
-  vertexsort1(sortarray, m->invertices);
-  /* printarray(sortarray, m->invertices); */
-
+  vertexsort(sortarray, m->invertices);
   /* Discard duplicate vertices, which can really mess up the algorithm. */
   i = 0;
   for (j = 1; j < m->invertices; j++) {
@@ -11553,7 +11485,7 @@ FILE *polyfile;
       for (j = 0; j < 2; j++) {
         if ((end[j] < b->firstnumber) ||
             (end[j] >= b->firstnumber + m->invertices)) {
-          printf("Error:  Segment %ld has an invalid vertex index.\n",
+          printf("Error:  Segment %ld has an invalid vertex index.\n", 
                  segmentnumber);
           triexit(1);
         }
@@ -13188,7 +13120,7 @@ int regions;
         } else {
           printf("Spreading regional attributes.\n");
         }
-      } else {
+      } else { 
         printf("Spreading regional area constraints.\n");
       }
     }
@@ -14361,7 +14293,7 @@ int *regions;
 /*                                                                           */
 /*****************************************************************************/
 
-/* #ifndef TRILIBRARY */
+#ifndef TRILIBRARY
 
 #ifdef ANSI_DECLARATORS
 void finishfile(FILE *outfile, int argc, char **argv)
@@ -14375,7 +14307,7 @@ char **argv;
 {
   int i;
 
-  fprintf(outfile, "# Generated by Triangle++");
+  fprintf(outfile, "# Generated by");
   for (i = 0; i < argc; i++) {
     fprintf(outfile, " ");
     fputs(argv[i], outfile);
@@ -14384,7 +14316,7 @@ char **argv;
   fclose(outfile);
 }
 
-/* #endif  *//* not TRILIBRARY */
+#endif /* not TRILIBRARY */
 
 /*****************************************************************************/
 /*                                                                           */
@@ -15336,7 +15268,7 @@ char **argv;
 /*                                                                           */
 /*****************************************************************************/
 
-/* #ifndef TRILIBRARY */
+#ifndef TRILIBRARY
 
 #ifdef ANSI_DECLARATORS
 void writeoff(struct mesh *m, struct behavior *b, char *offfilename,
@@ -15404,7 +15336,7 @@ char **argv;
   finishfile(outfile, argc, argv);
 }
 
-/* #endif */ /* not TRILIBRARY */
+#endif /* not TRILIBRARY */
 
 /**                                                                         **/
 /**                                                                         **/
@@ -15741,6 +15673,11 @@ struct behavior *b;
 /*                                                                           */
 /*****************************************************************************/
 
+//#define REDUCED
+#define ANSI_DECLARATORS
+#define TRILIBRARY
+//#define CDT_ONLY
+
 #ifdef TRILIBRARY
 
 #ifdef ANSI_DECLARATORS
@@ -15905,6 +15842,7 @@ char **argv;
 
 #ifndef CDT_ONLY
   if (b.quality && (m.triangles.items > 0)) {
+	//#error here
     enforcequality(&m, &b);           /* Enforce angle and area constraints. */
   }
 #endif /* not CDT_ONLY */
@@ -16082,8 +16020,3 @@ char **argv;
   return 0;
 #endif /* not TRILIBRARY */
 }
-
-
-}; // end of class piyush
-
-

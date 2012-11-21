@@ -18,14 +18,12 @@
 #endif
 
 
-typedef struct
-{
-    ofPoint a;
-    ofPoint b;
-    ofPoint c;
+typedef struct{
+    ofPoint pts[3];
+    int index[3];
     
-    float area;
-
+    ofColor randomColor;  // useful for debugging / drawing 
+    
 } ofxTriangleData;
 
 class ofxTriangle {
@@ -53,7 +51,13 @@ class ofxTriangle {
 	void clear();
 
     int nTriangles;
-	vector <ofxTriangleData> triangles;
+	
+    vector <ofPoint> outputPts;
+    vector <ofxTriangleData> triangles;
+    ofMesh triangulatedMesh;
+    
+    
+    
 
 };
 

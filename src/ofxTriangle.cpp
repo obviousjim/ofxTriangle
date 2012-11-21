@@ -25,7 +25,6 @@ void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution){
     int bSize = contour.size();
     float maxi = min(resolution, bSize);
 	
-    
     struct triangulateio in, mid, out, vorout;
     in.numberofpoints = maxi;
     in.numberofpointattributes = 0;
@@ -68,51 +67,102 @@ void ofxTriangle::triangulate(vector<ofPoint> contour, int resolution){
     
     triangulatePoints("zQq32", &in, &mid, NULL);
     
-    //printf("Initial triangulation:\n\n");
+    printf("Initial triangulation:\n\n");
     //report(&mid, 1, 1, 1, 1, 1, 0);
-    //    for (int i = 0; i < mid.numberofpoints; i++) {
-    //        printf("Point %4d:", i);
-    //        for (int j = 0; j < 2; j++) {
-    //            printf("  %.6g", mid.pointlist[i * 2 + j]);
-    //        }
-    //        printf("\n");
-    //
-    //    }
+        for (int i = 0; i < mid.numberofpoints; i++) {
+            printf("Point %4d:", i);
+            for (int j = 0; j < 2; j++) {
+                printf("  %.6g", mid.pointlist[i * 2 + j]);
+            }
+            printf("\n");
+
+        }
     
     
     
     nTriangles = 0;
+    
+    
+    std::map < int , ofPoint  > goodPts;
     
     for (int i = 0; i < mid.numberoftriangles; i++) {
         ofxTriangleData triangle;
         
         int whichPt;
         
-        whichPt = mid.trianglelist[i * mid.numberofcorners + 0];
-        triangle.a = ofPoint(  mid.pointlist[ whichPt * 2 + 0],  mid.pointlist[ whichPt * 2 + 1]);
-        whichPt = mid.trianglelist[i * mid.numberofcorners + 1];
-        triangle.b = ofPoint(  mid.pointlist[ whichPt * 2 + 0],  mid.pointlist[ whichPt * 2 + 1]);
-        whichPt = mid.trianglelist[i * mid.numberofcorners + 2];
-        triangle.c = ofPoint(  mid.pointlist[ whichPt * 2 + 0],  mid.pointlist[ whichPt * 2 + 1]);
+        for (int j = 0; j < 3; j++){
+            whichPt = mid.trianglelist[i * 3 + j];
+            triangle.pts[j] = ofPoint(  mid.pointlist[ whichPt * 2 + 0],  mid.pointlist[ whichPt * 2 + 1]);
+            triangle.index[j] = whichPt;
+            
+            
+            
+        }
         
         ofPoint tr[3];
-        tr[0] = triangle.a;
-        tr[1] = triangle.b;
-        tr[2] = triangle.c;
+        tr[0] = triangle.pts[0];
+        tr[1] = triangle.pts[1];
+        tr[2] = triangle.pts[2];
 		
         if( isPointInsidePolygon(&contour[0], contour.size(), getTriangleCenter(tr) ) ) {
+            
+            triangle.randomColor = ofColor(ofRandom(0,255), ofRandom(0,255), ofRandom(0,255));
+        
             triangles.push_back(triangle);
+            
+            // store the good points in a map
+            for (int j = 0; j < 3; j++){
+                goodPts[triangle.index[j]] = triangle.pts[j]; 
+            }
+            
             nTriangles++;
         }
-
     }
+    
+    
+    // put all good points in a vector and handle the remapping of indices.
+    // the indices stored above were for all points, but since we drop triangles, we 
+    // can drop non used points, and then remap all the indces. 
+    
+    outputPts.clear();
+    std::map < int, int > indexChanges;
+    std::map< int , ofPoint >::iterator iter;
+    for (iter = goodPts.begin(); iter != goodPts.end(); ++iter) {
+        cout << iter->first << " " << iter->second << endl;
+        indexChanges[iter->first] = outputPts.size();
+        outputPts.push_back(iter->second);
+    }
+    
+    for (int i = 0; i < triangles.size(); i++){
+        for (int j = 0; j < 3; j++){
+            triangles[i].index[j] = indexChanges[triangles[i].index[j]];
+        }
+    }
+    
+    
+    triangulatedMesh.clear();
+    triangulatedMesh.setMode(OF_PRIMITIVE_TRIANGLES);
+    for (int i = 0; i < outputPts.size(); i++){
+        triangulatedMesh.addVertex(outputPts[i]);
+    }
+    
+    for (int i = 0; i < triangles.size(); i++){
+        triangulatedMesh.addIndex(triangles[i].index[0]);;
+        triangulatedMesh.addIndex(triangles[i].index[1]);;
+        triangulatedMesh.addIndex(triangles[i].index[2]);;
+    }
+    
+    
+
+    // depending on flags, we may need to adjust some of the memory clearing
+    // (see tricall.c for full listings)
     
     free(in.pointlist);
     free(mid.pointlist);
-    free(mid.pointattributelist);
-    free(mid.pointmarkerlist);
+    if (mid.pointattributelist != NULL) free(mid.pointattributelist);
+    if (mid.pointmarkerlist != NULL) free(mid.pointmarkerlist);
     free(mid.trianglelist);
-    free(mid.triangleattributelist);
+    if (mid.triangleattributelist != NULL) free(mid.triangleattributelist);
     
     return;
 
@@ -173,9 +223,16 @@ void ofxTriangle::draw(float r, float g, float b) {
     ofFill();
 	
     for (int i=0; i<nTriangles; i++){
-        ofSetColor( ofRandom(0,255));
-        ofTriangle( triangles[i].a.x, triangles[i].a.y,
-				   triangles[i].b.x, triangles[i].b.y,
-				   triangles[i].c.x, triangles[i].c.y);
+        ofSetColor( triangles[i].randomColor);
+
+        ofTriangle( outputPts[triangles[i].index[0]], 
+        outputPts[triangles[i].index[1]],
+                   outputPts[triangles[i].index[2]]);
+        
+        
+        ofSetColor(255,255,255);
+        triangulatedMesh.drawWireframe();
+        
+        
     }
 }

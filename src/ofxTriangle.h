@@ -35,7 +35,11 @@ typedef struct
 class ofxTriangle {
     public :
 
-	ofxTriangle(){}
+	ofxTriangle(){
+        nTriangles = 0;
+        delobject = NULL;
+    }
+    
 	~ofxTriangle(){}
 #ifdef USE_OPENCV
 	// Triangulate a openCV blob
@@ -54,7 +58,6 @@ class ofxTriangle {
 
 
 	Delaunay* delobject;
-
 	int nTriangles;
 	vector <ofxTriangleData> triangles;
 

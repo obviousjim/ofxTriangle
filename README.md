@@ -1,3 +1,9 @@
+
+
+(note this branch / origTriangle is using triangle, not triangle++, so it can run switches that add steiner points, set angle contstraints, etc and produce better meshes)
+
+
+
 ofxTriangle
 -----------
 - Given a set of points from a complex polygon, triangulates the points of the smallest number of triangles required to fill that polygon.

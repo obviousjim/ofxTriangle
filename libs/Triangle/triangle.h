@@ -1,11 +1,12 @@
 
+#define VOID void
+//#define REDUCED
+#define ANSI_DECLARATORS
+#define TRILIBRARY
+//#define CDT_ONLY
+// define REAL real
+#define REAL double
 
-/*! \file triangle.h
-        \brief Exports triangulateio structure for use in del_impl.hpp
-
-		You should not use struct triangulateio in your application
-		if you are using this wrapper.
- */
 /*****************************************************************************/
 /*                                                                           */
 /*  (triangle.h)                                                             */
@@ -295,5 +296,3 @@ void trifree(VOID *memptr);
 void triangulate();
 void trifree();
 #endif /* not ANSI_DECLARATORS */
-
-

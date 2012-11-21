@@ -17,25 +17,23 @@
 #include "ofxOpenCv.h"
 #endif
 
-#include <del_interface.hpp>
 
-using namespace tpp;
-//using namespace std;
-
-typedef struct
-{
-    ofPoint a;
-    ofPoint b;
-    ofPoint c;
-
-    float area;
-
+typedef struct{
+    ofPoint pts[3];
+    int index[3];
+    
+    ofColor randomColor;  // useful for debugging / drawing 
+    
 } ofxTriangleData;
 
 class ofxTriangle {
     public :
 
-	ofxTriangle(){}
+	ofxTriangle(){
+        nTriangles = 0;
+        //delobject = NULL;
+    }
+    
 	~ofxTriangle(){}
 #ifdef USE_OPENCV
 	// Triangulate a openCV blob
@@ -52,11 +50,14 @@ class ofxTriangle {
 	void draw(float x, float y);
 	void clear();
 
-
-	Delaunay* delobject;
-
-	int nTriangles;
-	vector <ofxTriangleData> triangles;
+    int nTriangles;
+	
+    vector <ofPoint> outputPts;
+    vector <ofxTriangleData> triangles;
+    ofMesh triangulatedMesh;
+    
+    
+    
 
 };
 

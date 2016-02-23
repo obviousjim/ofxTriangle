@@ -359,9 +359,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#ifndef NO_TIMER
+/*#ifndef NO_TIMER
 #include <sys/time.h>
-#endif /* not NO_TIMER */
+#endif  not NO_TIMER */
 #ifdef CPU86
 #include <float.h>
 #endif /* CPU86 */
@@ -15774,16 +15774,16 @@ char **argv;
 #ifndef TRILIBRARY
   FILE *polyfile;
 #endif /* not TRILIBRARY */
-#ifndef NO_TIMER
-  /* Variables for timing the performance of Triangle.  The types are */
-  /*   defined in sys/time.h.                                         */
+/*#ifndef NO_TIMER
+   Variables for timing the performance of Triangle.  The types are 
+   defined in sys/time.h.                                         
   struct timeval tv0, tv1, tv2, tv3, tv4, tv5, tv6;
   struct timezone tz;
 #endif /* not NO_TIMER */
 
-#ifndef NO_TIMER
+/*#ifndef NO_TIMER
   gettimeofday(&tv0, &tz);
-#endif /* not NO_TIMER */
+#endif  not NO_TIMER */
 
   triangleinit(&m);
 #ifdef TRILIBRARY
@@ -15801,11 +15801,11 @@ char **argv;
   readnodes(&m, &b, b.innodefilename, b.inpolyfilename, &polyfile);
 #endif /* not TRILIBRARY */
 
-#ifndef NO_TIMER
+/* #ifndef NO_TIMER
   if (!b.quiet) {
     gettimeofday(&tv1, &tz);
   }
-#endif /* not NO_TIMER */
+#endif not NO_TIMER */
 
 #ifdef CDT_ONLY
   m.hullsize = delaunay(&m, &b);                /* Triangulate the vertices. */
@@ -15828,7 +15828,7 @@ char **argv;
   }
 #endif /* not CDT_ONLY */
 
-#ifndef NO_TIMER
+/* #ifndef NO_TIMER
   if (!b.quiet) {
     gettimeofday(&tv2, &tz);
     if (b.refine) {
@@ -15839,7 +15839,7 @@ char **argv;
     printf(" milliseconds:  %ld\n", 1000l * (tv2.tv_sec - tv1.tv_sec) +
            (tv2.tv_usec - tv1.tv_usec) / 1000l);
   }
-#endif /* not NO_TIMER */
+#endif not NO_TIMER */
 
   /* Ensure that no vertex can be mistaken for a triangular bounding */
   /*   box vertex in insertvertex().                                 */
@@ -15860,7 +15860,7 @@ char **argv;
     }
   }
 
-#ifndef NO_TIMER
+/* #ifndef NO_TIMER
   if (!b.quiet) {
     gettimeofday(&tv3, &tz);
     if (b.usesegments && !b.refine) {
@@ -15869,7 +15869,7 @@ char **argv;
              (tv3.tv_usec - tv2.tv_usec) / 1000l);
     }
   }
-#endif /* not NO_TIMER */
+#endif not NO_TIMER */
 
   if (b.poly && (m.triangles.items > 0)) {
 #ifdef TRILIBRARY
@@ -15893,7 +15893,7 @@ char **argv;
     m.regions = 0;
   }
 
-#ifndef NO_TIMER
+/* #ifndef NO_TIMER
   if (!b.quiet) {
     gettimeofday(&tv4, &tz);
     if (b.poly && !b.refine) {
@@ -15901,7 +15901,7 @@ char **argv;
              (tv4.tv_usec - tv3.tv_usec) / 1000l);
     }
   }
-#endif /* not NO_TIMER */
+#endif not NO_TIMER */
 
 #ifndef CDT_ONLY
   if (b.quality && (m.triangles.items > 0)) {
@@ -15909,9 +15909,9 @@ char **argv;
   }
 #endif /* not CDT_ONLY */
 
-#ifndef NO_TIMER
-  if (!b.quiet) {
-    gettimeofday(&tv5, &tz);
+//#ifndef NO_TIMER
+//  if (!b.quiet) {
+//    gettimeofday(&tv5, &tz);
 #ifndef CDT_ONLY
     if (b.quality) {
       printf("Quality milliseconds:  %ld\n",
@@ -15919,19 +15919,19 @@ char **argv;
              (tv5.tv_usec - tv4.tv_usec) / 1000l);
     }
 #endif /* not CDT_ONLY */
-  }
-#endif /* not NO_TIMER */
+  /*}
+#endif  not NO_TIMER */
 
-  /* Calculate the number of edges. */
+  /* Calculate the number of edges.
   m.edges = (3l * m.triangles.items + m.hullsize) / 2l;
-
+							 
   if (b.order > 1) {
-    highorder(&m, &b);       /* Promote elements to higher polynomial order. */
+    highorder(&m, &b);       // Promote elements to higher polynomial order. 
   }
   if (!b.quiet) {
     printf("\n");
   }
-
+	   */
 #ifdef TRILIBRARY
   if (b.jettison) {
     out->numberofpoints = m.vertices.items - m.undeads;
@@ -16057,7 +16057,7 @@ char **argv;
   }
 
   if (!b.quiet) {
-#ifndef NO_TIMER
+/* #ifndef NO_TIMER
     gettimeofday(&tv6, &tz);
     printf("\nOutput milliseconds:  %ld\n",
            1000l * (tv6.tv_sec - tv5.tv_sec) +
@@ -16065,7 +16065,7 @@ char **argv;
     printf("Total running milliseconds:  %ld\n",
            1000l * (tv6.tv_sec - tv0.tv_sec) +
            (tv6.tv_usec - tv0.tv_usec) / 1000l);
-#endif /* not NO_TIMER */
+#endif not NO_TIMER */
 
     statistics(&m, &b);
   }

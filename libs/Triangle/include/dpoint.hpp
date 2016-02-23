@@ -334,7 +334,7 @@ public:
 	inline void move2origin(){ origin<NumType, D, D-1>::eval(*this); };
 
 	dpoint(){ 
-		Assert( (D >= 1), "Dimension < 1 not allowed" ); 
+		//Assert( (D >= 1), "Dimension < 1 not allowed" ); 
 		// move2origin(); 
 	};
 
@@ -467,7 +467,7 @@ template < typename NumType, unsigned D >
 dpoint<NumType,D>&
 dpoint<NumType,D>::operator=(const dpoint<NumType,D> &q)
 {
-  Assert((this != &q), "Error p = p");
+  //Assert((this != &q), "Error p = p");
   Equate<NumType,NumType,D,D-1>::eval(*this,q);	
   return *this;
 }

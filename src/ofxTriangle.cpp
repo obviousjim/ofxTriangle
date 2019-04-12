@@ -116,7 +116,7 @@ void ofxTriangle::draw(float r, float g, float b) {
 	
     for (int i=0; i<nTriangles; i++){
         ofSetColor(r,g,b);
-        ofTriangle( triangles[i].a.x, triangles[i].a.y,
+        ofDrawTriangle( triangles[i].a.x, triangles[i].a.y,
 				   triangles[i].b.x, triangles[i].b.y,
 				   triangles[i].c.x, triangles[i].c.y);
     }

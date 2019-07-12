@@ -2,6 +2,8 @@
 #define ANSI_DECLARATORS
 #define TRILIBRARY
 #define CDT_ONLY
+#define NO_TIMER
+
 
 
 /*! \file triangle_impl.hpp
